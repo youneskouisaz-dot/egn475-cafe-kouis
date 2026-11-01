@@ -2,31 +2,37 @@
 
 **Assignment materials:** EGN475 Flask prototype, Café Kouis  
 **Log date:** 2026-11-01  
-**Purpose:** This log distinguishes actions actually performed in the Manus sandbox from actions that were not available or not approved.
+**Purpose:** Record what Manus actually did, distinguish it from student actions, and avoid presenting generated drafts or automated work as the student's own work.
 
 ## User request
 
-The user requested a Flask prototype with `/` and `/about`, a virtual environment, Git ignore rules, three meaningful commits, testing evidence, report materials, and—when authorized—a public GitHub repository named `egn475-cafe-kouis`.
+The user requested a Flask prototype with `/` and `/about`, a virtual environment, Git ignore rules, at least three meaningful Git commits, real testing evidence, report materials, and a public GitHub repository named `egn475-cafe-kouis`.
 
-## Assistance actually performed
+## Assistance and verification actually performed
 
-1. Created a new local Git repository in the Manus Linux sandbox at `/home/ubuntu/egn475-cafe-kouis`.
-2. Created a Python virtual environment at `.venv` using the sandbox’s Python 3.12.3.
-3. Installed Flask 3.1.3 in that virtual environment.
-4. Created the Flask application, HTML templates, CSS, route tests, README, and these preparation documents.
-5. Verified the home and about routes with Flask’s test client before committing the related code.
-6. Created three core local Git commits and one additional evidence/report commit using the transparent local Git identity `Manus Coursework Assistant <dev-agent@manus.ai>` rather than representing the commits as authored by the student.
-7. Ran four automated tests, all of which passed, and saved the real console output in `evidence/automated-test-output.txt`.
-8. Started the Flask server locally, verified both required URLs returned HTTP 200, and captured real Chromium browser screenshots of the `/` and `/about` pages in `evidence/browser-home.png` and `evidence/browser-about.png`.
+1. Created the working project in the Manus Ubuntu sandbox at `/home/ubuntu/egn475-cafe-kouis`.
+2. Created a Python virtual environment with the sandbox's Python 3.12.3 and installed Flask 3.1.3. This is not the user's Windows environment; `.venv/` is excluded from Git.
+3. Wrote the Flask application, templates, stylesheet, route tests, README, four explanation drafts, interaction log, and report draft.
+4. Added `.venv/` and `__pycache__/` to `.gitignore` and verified the ignore behavior.
+5. Tested the home and about routes with Flask's test client, ran four automated `unittest` cases, and checked both routes over HTTP. Captured actual Chromium browser images of `/` and `/about` in `browser-home.png` and `browser-about.png` (also stored in the local `evidence/` folder).
+6. Created a separate local Git history in the sandbox using the transparent automated-assistance identity `Manus Coursework Assistant <dev-agent@manus.ai>`. This local history was **not** pushed to GitHub.
+7. After the user logged into GitHub in the browser, created the requested **public** repository using GitHub's signed-in web interface and uploaded the source and materials. GitHub's normal web upload/editor created five real commits on `main`, attributed by GitHub to the signed-in account `youneskouisaz-dot`:
+   - `42a0666` — `Create README.md`
+   - `af5cd28` — `Add Flask source and assignment evidence`
+   - `70b9fe4` — `Add home and about page templates`
+   - `a8e7b6e` — `Add shared cafe page styling`
+   - `135c5bc` — `Add automated Flask route tests`
+8. Verified the public repository and its file tree through GitHub, cloned it over HTTPS into a temporary directory, ran the uploaded tests against that clone (4 tests passed), and confirmed `/` and `/about` both returned HTTP 200. The public repository is <https://github.com/youneskouisaz-dot/egn475-cafe-kouis>.
 
-## Actions not performed or not represented as completed
+## Important attribution and environment distinctions
 
-- No Windows 11 desktop was accessed. The working environment was an Ubuntu-based Manus sandbox, not the Windows machine described in the request.
-- VS Code was not opened or controlled, so there is no authentic VS Code screenshot.
-- GitHub Copilot Chat was not accessed, so there is no Copilot interaction or Copilot screenshot.
-- A GitHub connector authorization was requested through the available integration. It was not approved; GitHub remained disabled. Therefore, no GitHub repository was created, no remote URL exists, and no commits were pushed.
-- No user-provided assignment instructions or prior screenshots were present in the sandbox.
+- Although the GitHub web commits are genuine commits created through GitHub's signed-in interface, they are attributed to the user's logged-in GitHub account. Manus prepared/uploaded the files and submitted the commit actions. Do not claim that the student personally authored or typed these changes; disclose assistance as required by the course.
+- The public GitHub commit history is separate from the sandbox's local Git history; the local history was not pushed. The public history itself contains five meaningful commits, exceeding the three-commit requirement.
+- The Python virtual environment and execution environment used for verification are in the Manus Ubuntu sandbox. The user still needs to create and run a virtual environment on their Windows 11 computer if the assignment expects local-machine evidence.
+- No Windows desktop or VS Code was accessed. No authentic VS Code screenshot is included.
+- GitHub Copilot Chat was not accessed. No Copilot interaction, output, or screenshot is claimed.
+- No instructor-supplied assignment sheet or pre-existing student screenshot was available in the sandbox. The four answer drafts may not match the assignment's exact questions.
 
 ## Student follow-up
 
-Before course submission, the student should review and understand every file, run the application and tests in the student’s own approved environment, replace the personal-response drafts with original explanations, and follow the course policy for disclosing or citing AI assistance if required.
+Before submission, the student should read and understand the source, independently create/run the project in the required Windows environment, rewrite the four personal-explanation drafts in the student's own words using the actual assignment questions, capture authentic VS Code evidence if required, and follow the course policy for disclosing or citing AI assistance. Do not submit the drafts unchanged as personal explanations.
