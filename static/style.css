@@ -1,0 +1,117 @@
+:root {
+  --ink: #1f2924;
+  --cream: #fbf6ed;
+  --paper: #fffdf9;
+  --leaf: #315c47;
+  --gold: #d99b44;
+  --line: #ddd1c0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--cream);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.55;
+}
+
+.site-header {
+  width: min(1120px, 92%);
+  margin: 0 auto;
+  padding: 1.4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  color: var(--leaf);
+  font-size: 1.45rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+nav a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: .25rem;
+}
+
+nav a:hover, nav a.active { border-color: var(--gold); }
+
+main { width: min(1120px, 92%); margin: 0 auto; }
+
+.hero {
+  padding: 8rem 0 6rem;
+  max-width: 760px;
+}
+
+.eyebrow {
+  margin: 0 0 .75rem;
+  color: var(--leaf);
+  font-family: Arial, sans-serif;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+h1, h2, h3 { line-height: 1.1; }
+
+h1 { margin: 0; font-size: clamp(2.7rem, 7vw, 5.7rem); letter-spacing: -.045em; }
+h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.5rem); letter-spacing: -.035em; }
+h3 { margin: 0 0 .7rem; font-size: 1.3rem; }
+
+.intro { max-width: 610px; margin: 1.5rem 0 2rem; font-size: 1.2rem; }
+
+.button {
+  display: inline-block;
+  padding: .8rem 1.1rem;
+  color: #fff;
+  background: var(--leaf);
+  border-radius: .2rem;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button:hover { background: #254836; }
+
+.menu { padding: 2.5rem 0 5rem; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.card {
+  padding: 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: .4rem;
+  box-shadow: 0 7px 0 rgba(82, 56, 27, .05);
+}
+
+.card p { min-height: 3rem; margin: 0 0 1.2rem; }
+.card span { color: var(--leaf); font-weight: 700; }
+
+footer {
+  padding: 2rem 4%;
+  color: #f8f1e8;
+  background: var(--ink);
+  font-family: Arial, sans-serif;
+  font-size: .85rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .hero { padding: 5rem 0 4rem; }
+  .cards { grid-template-columns: 1fr; }
+  .card p { min-height: auto; }
+}
