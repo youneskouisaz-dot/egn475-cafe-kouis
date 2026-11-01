@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('home') }}">Café Kouis</a>
+    <nav aria-label="Main navigation">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a class="active" href="{{ url_for('about') }}">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero about-hero">
+      <p class="eyebrow">About this prototype</p>
+      <h1>Learning the Flask request-to-response cycle.</h1>
+      <p class="intro">Café Kouis is a small EGN475 practice project. The home and about URLs are each mapped to a Python function in <code>app.py</code>, and each function returns an HTML template.</p>
+    </section>
+
+    <section class="menu about-copy" aria-labelledby="goal-title">
+      <p class="eyebrow">Project goal</p>
+      <h2 id="goal-title">Keep the structure understandable.</h2>
+      <p>The project separates route logic, templates, and styling. That organization makes it easier to find the code that controls a page, update its content, and add future pages without putting everything in one file.</p>
+      <p><a class="text-link" href="{{ url_for('home') }}">Return to the home page</a></p>
+    </section>
+  </main>
+
+  <footer>EGN475 prototype · Café Kouis</footer>
+</body>
+</html>
