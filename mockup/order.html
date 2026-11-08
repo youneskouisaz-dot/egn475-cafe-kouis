@@ -103,8 +103,10 @@
       box-shadow: none;
       font-size: 1.2rem;
     }
+    .quantity-control button:disabled { opacity: .45; cursor: not-allowed; }
     .quantity-control output { min-width: 2.4rem; text-align: center; font-weight: 700; }
     .remove-button { min-width: 2.6rem; min-height: 2.6rem; padding: .25rem; margin: 0; font-size: 1.2rem; }
+    .empty-order { padding: 1.5rem !important; text-align: center; }
     .order-total {
       display: flex;
       justify-content: space-between;
@@ -122,6 +124,7 @@
     .page-actions { display: flex; justify-content: space-between; gap: 1rem; }
     .outline-link, .primary-link { min-height: 3.25rem; padding: .65rem 1.5rem; font-size: 1.15rem; }
     .primary-link { min-width: min(42%, 340px); }
+    .primary-link[aria-disabled="true"] { opacity: .55; pointer-events: none; }
 
     @media (max-width: 760px) {
       body { padding: .75rem; }
@@ -169,41 +172,41 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-price="3.50">
               <td>
                 <div class="item-name"><span class="item-icon" aria-hidden="true">☕</span><span>Café con Leche</span></div>
               </td>
               <td class="money">$3.50</td>
               <td>
-                <div class="quantity-control" aria-label="Quantity 1 for Café con Leche">
-                  <button type="button" aria-label="Decrease Café con Leche quantity">−</button>
-                  <output>1</output>
-                  <button type="button" aria-label="Increase Café con Leche quantity">+</button>
+                <div class="quantity-control">
+                  <button type="button" class="decrease-quantity" aria-label="Decrease Café con Leche quantity">−</button>
+                  <output aria-live="polite">1</output>
+                  <button type="button" class="increase-quantity" aria-label="Increase Café con Leche quantity">+</button>
                 </div>
               </td>
-              <td class="money">$3.50</td>
+              <td class="money line-total">$3.50</td>
               <td><button class="remove-button" type="button" aria-label="Remove Café con Leche">♧</button></td>
             </tr>
-            <tr>
+            <tr data-price="8.50">
               <td>
                 <div class="item-name"><span class="item-icon" aria-hidden="true">🥪</span><span>Cuban Sandwich</span></div>
               </td>
               <td class="money">$8.50</td>
               <td>
-                <div class="quantity-control" aria-label="Quantity 1 for Cuban Sandwich">
-                  <button type="button" aria-label="Decrease Cuban Sandwich quantity">−</button>
-                  <output>1</output>
-                  <button type="button" aria-label="Increase Cuban Sandwich quantity">+</button>
+                <div class="quantity-control">
+                  <button type="button" class="decrease-quantity" aria-label="Decrease Cuban Sandwich quantity">−</button>
+                  <output aria-live="polite">1</output>
+                  <button type="button" class="increase-quantity" aria-label="Increase Cuban Sandwich quantity">+</button>
                 </div>
               </td>
-              <td class="money">$8.50</td>
+              <td class="money line-total">$8.50</td>
               <td><button class="remove-button" type="button" aria-label="Remove Cuban Sandwich">♧</button></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="order-total"><span>Order Total:</span><strong>$12.00</strong></div>
+      <div class="order-total" aria-live="polite"><span>Order Total:</span><strong>$12.00</strong></div>
 
       <div class="page-actions">
         <a class="outline-link" href="menu.html"><span aria-hidden="true">←</span>&nbsp; Back to Menu</a>
@@ -211,5 +214,63 @@
       </div>
     </main>
   </div>
+  <script>
+    const orderBody = document.querySelector('.order-table tbody');
+    const orderTotal = document.querySelector('.order-total strong');
+    const placeOrderLink = document.querySelector('.primary-link');
+
+    function updateOrder() {
+      const rows = [...orderBody.querySelectorAll('tr[data-price]')];
+      let total = 0;
+
+      rows.forEach((row) => {
+        const quantityOutput = row.querySelector('output');
+        const quantity = Number(quantityOutput.value || quantityOutput.textContent);
+        const price = Number(row.dataset.price);
+        row.querySelector('.line-total').textContent = `$${(price * quantity).toFixed(2)}`;
+        row.querySelector('.decrease-quantity').disabled = quantity <= 1;
+        total += price * quantity;
+      });
+
+      if (rows.length === 0) {
+        if (!orderBody.querySelector('.empty-order')) {
+          const emptyRow = document.createElement('tr');
+          emptyRow.innerHTML = '<td class="empty-order" colspan="5">Your order is empty. Add items from the menu.</td>';
+          orderBody.append(emptyRow);
+        }
+        placeOrderLink.setAttribute('aria-disabled', 'true');
+        placeOrderLink.setAttribute('tabindex', '-1');
+      } else {
+        orderBody.querySelector('.empty-order')?.closest('tr')?.remove();
+        placeOrderLink.removeAttribute('aria-disabled');
+        placeOrderLink.removeAttribute('tabindex');
+      }
+
+      orderTotal.textContent = `$${total.toFixed(2)}`;
+    }
+
+    orderBody.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+
+      const row = button.closest('tr[data-price]');
+      if (!row) return;
+
+      const quantityOutput = row.querySelector('output');
+      const quantity = Number(quantityOutput.textContent);
+
+      if (button.classList.contains('increase-quantity')) {
+        quantityOutput.textContent = quantity + 1;
+      } else if (button.classList.contains('decrease-quantity')) {
+        if (quantity > 1) quantityOutput.textContent = quantity - 1;
+      } else if (button.classList.contains('remove-button')) {
+        row.remove();
+      }
+
+      updateOrder();
+    });
+
+    updateOrder();
+  </script>
 </body>
 </html>
