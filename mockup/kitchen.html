@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kitchen order board for Café Calle Ocho.">
+  <title>Kitchen Board | Café Calle Ocho</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    :root {
+      --pico-font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+      --pico-border-radius: 1rem;
+      --pico-color: #171717;
+      --pico-primary: #171717;
+    }
+
+    body { padding: 1.5rem 1rem; }
+    .cafe-app {
+      max-width: 1140px;
+      margin: 0 auto;
+      border: 2px solid #171717;
+      border-radius: 2rem;
+      overflow: hidden;
+    }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 1.25rem 2rem;
+      border-bottom: 2px solid #171717;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .brand-icon { font-size: 2.5rem; line-height: 1; }
+    .brand-name { font-size: 1.35rem; font-weight: 700; }
+    .main-nav { display: flex; flex-wrap: wrap; gap: .65rem; }
+    .main-nav a, .board-filter, .order-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.65rem;
+      padding: .5rem 1rem;
+      border: 2px solid #171717;
+      border-radius: .8rem;
+      color: #171717;
+      background-color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 #171717;
+    }
+    .main-nav a[aria-current="page"], .order-action {
+      background-image: repeating-linear-gradient(135deg, #fff 0, #fff 5px, #e8e8e8 5px, #e8e8e8 7px);
+    }
+    main { padding: 1.5rem 1.25rem 2rem; }
+    .board-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 2.8rem); }
+    .intro { margin: .25rem 0 0; }
+    .board-tools { display: flex; align-items: center; gap: .8rem; }
+    .search-field {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      width: 230px;
+      margin: 0;
+      padding: 0 .65rem;
+      border: 2px solid #171717;
+      border-radius: .8rem;
+    }
+    .search-field input {
+      min-width: 0;
+      margin: 0;
+      padding: .5rem 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+    .search-icon { font-size: 1.3rem; }
+    .board-filter { min-height: 3rem; margin: 0; }
+    .board-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .9rem;
+    }
+    .board-column {
+      min-height: 320px;
+      margin: 0;
+      padding: 0;
+      border: 2px solid #171717;
+      border-radius: 1.2rem;
+      box-shadow: 0 2px 0 #171717;
+      overflow: hidden;
+    }
+    .column-heading {
+      margin: 0;
+      padding: .7rem .8rem;
+      border-bottom: 2px solid #171717;
+      text-align: center;
+      font-size: 1.3rem;
+      background-image: repeating-linear-gradient(135deg, #fff 0, #fff 5px, #e8e8e8 5px, #e8e8e8 7px);
+    }
+    .order-card {
+      margin: .85rem .65rem;
+      padding: .7rem;
+      border: 2px solid #171717;
+      border-radius: 1rem;
+      box-shadow: 0 2px 0 #171717;
+    }
+    .order-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .5rem;
+      margin-bottom: .45rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .order-card h3 { margin: 0; font-size: 1.2rem; }
+    .order-time { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .order-items { margin: 0 0 .65rem; padding-left: 1.2rem; font-size: .95rem; }
+    .order-items li { margin-bottom: .15rem; }
+    .order-action { width: 100%; min-height: 2.45rem; margin: 0; padding: .35rem .5rem; font-size: .95rem; }
+    .ready-label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .35rem;
+      min-height: 2.45rem;
+      margin: 0;
+      border: 2px solid #171717;
+      border-radius: .8rem;
+      background: #fff;
+      font-size: .9rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 850px) {
+      .board-heading-row { align-items: flex-start; flex-direction: column; }
+      .board-tools { width: 100%; }
+      .search-field { flex: 1; width: auto; }
+    }
+    @media (max-width: 760px) {
+      body { padding: .75rem; }
+      .cafe-app { border-radius: 1.25rem; }
+      .site-header { align-items: flex-start; flex-direction: column; padding: 1rem; }
+      .main-nav { width: 100%; }
+      .main-nav a { flex: 1 1 auto; padding-inline: .65rem; }
+      main { padding: 1.25rem 1rem 1.5rem; }
+      .board-columns { grid-template-columns: 1fr; }
+      .board-column { min-height: auto; padding-bottom: .25rem; }
+    }
+    @media (max-width: 480px) {
+      .board-tools { align-items: stretch; flex-direction: column; }
+      .search-field, .board-filter { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cafe-app">
+    <header class="site-header">
+      <a class="brand" href="menu.html" aria-label="Café Calle Ocho menu">
+        <span class="brand-icon" aria-hidden="true">☕</span>
+        <span class="brand-name">Café Calle Ocho</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="menu.html">Menu</a>
+        <a href="order.html">My Order</a>
+        <a href="history.html">Track Order</a>
+        <a href="kitchen.html" aria-current="page">Kitchen</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="board-heading-row">
+        <div>
+          <h1>Kitchen Board</h1>
+          <p class="intro">Manage incoming orders and update their preparation status.</p>
+        </div>
+        <div class="board-tools">
+          <label class="search-field">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input type="search" placeholder="Search order # ..." aria-label="Search order number">
+          </label>
+          <select class="board-filter" aria-label="Filter orders">
+            <option>All Orders</option>
+            <option>Received</option>
+            <option>Preparing</option>
+            <option>Ready</option>
+          </select>
+        </div>
+      </div>
+
+      <section class="board-columns" aria-label="Orders by preparation status">
+        <section class="board-column" aria-labelledby="received-title">
+          <h2 class="column-heading" id="received-title">Received (1)</h2>
+          <article class="order-card">
+            <header>
+              <h3>#1043</h3>
+              <span class="order-time">1:28 PM</span>
+            </header>
+            <ul class="order-items">
+              <li>1 × Guava Pastry</li>
+              <li>1 × Café con Leche</li>
+            </ul>
+            <button class="order-action" type="button">Start Preparing <span aria-hidden="true">→</span></button>
+          </article>
+        </section>
+
+        <section class="board-column" aria-labelledby="preparing-title">
+          <h2 class="column-heading" id="preparing-title">Preparing (1)</h2>
+          <article class="order-card">
+            <header>
+              <h3>#1042</h3>
+              <span class="order-time">1:24 PM</span>
+            </header>
+            <ul class="order-items">
+              <li>1 × Café con Leche</li>
+              <li>1 × Cuban Sandwich</li>
+            </ul>
+            <button class="order-action" type="button">Mark Ready <span aria-hidden="true">✓</span></button>
+          </article>
+        </section>
+
+        <section class="board-column" aria-labelledby="ready-title">
+          <h2 class="column-heading" id="ready-title">Ready (1)</h2>
+          <article class="order-card">
+            <header>
+              <h3>#1041</h3>
+              <span class="order-time">12:10 PM</span>
+            </header>
+            <ul class="order-items">
+              <li>1 × Guava Pastry</li>
+            </ul>
+            <p class="ready-label"><span aria-hidden="true">✓</span> Ready for Pickup</p>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
