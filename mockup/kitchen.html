@@ -115,6 +115,7 @@
       background-image: repeating-linear-gradient(135deg, #fff 0, #fff 5px, #e8e8e8 5px, #e8e8e8 7px);
     }
     .order-card {
+      min-width: 0;
       margin: .85rem .65rem;
       padding: .7rem;
       border: 2px solid #171717;
@@ -126,13 +127,14 @@
       justify-content: space-between;
       align-items: baseline;
       gap: .5rem;
-      margin-bottom: .45rem;
+      /* Override Pico's article > header negative margins so order details stay inside the card. */
+      margin: 0 0 .45rem;
       padding: 0;
       border: 0;
       background: transparent;
     }
-    .order-card h3 { margin: 0; font-size: 1.2rem; }
-    .order-time { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .order-card h3 { min-width: 0; margin: 0; font-size: 1.2rem; }
+    .order-time { flex: 0 1 auto; font-size: .82rem; font-weight: 700; text-align: right; white-space: nowrap; }
     .order-items { margin: 0 0 .65rem; padding-left: 1.2rem; font-size: .95rem; }
     .order-items li { margin-bottom: .15rem; }
     .order-action { width: 100%; min-height: 2.45rem; margin: 0; padding: .35rem .5rem; font-size: .95rem; }
