@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Check the status of your Café Calle Ocho order or view recent orders.">
+  <title>Track Order | Café Calle Ocho</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    :root {
+      --pico-font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
+      --pico-border-radius: 1rem;
+      --pico-color: #171717;
+      --pico-primary: #171717;
+    }
+
+    body { padding: 1.5rem 1rem; }
+    .cafe-app {
+      max-width: 1140px;
+      margin: 0 auto;
+      border: 2px solid #171717;
+      border-radius: 2rem;
+      overflow: hidden;
+    }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      padding: 1.25rem 2rem;
+      border-bottom: 2px solid #171717;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .brand-icon { font-size: 2.5rem; line-height: 1; }
+    .brand-name { font-size: 1.35rem; font-weight: 700; }
+    .main-nav { display: flex; flex-wrap: wrap; gap: .65rem; }
+    .main-nav a, .check-button, .back-link, .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.65rem;
+      padding: .5rem 1rem;
+      border: 2px solid #171717;
+      border-radius: .8rem;
+      color: #171717;
+      background-color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 #171717;
+    }
+    .main-nav a[aria-current="page"], .check-button, .status {
+      background-image: repeating-linear-gradient(135deg, #fff 0, #fff 5px, #e8e8e8 5px, #e8e8e8 7px);
+    }
+    main { padding: 1.5rem 1.75rem 2rem; }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 2.8rem); }
+    .intro { margin: .25rem 0 1.25rem; }
+    .lookup {
+      display: grid;
+      grid-template-columns: auto minmax(180px, 1fr) auto;
+      align-items: center;
+      gap: 1rem;
+      margin: 0 0 1.5rem;
+      padding: 1rem;
+      border: 2px solid #171717;
+      border-radius: 1.2rem;
+      box-shadow: 0 2px 0 #171717;
+    }
+    .lookup label { margin: 0; font-weight: 700; white-space: nowrap; }
+    .lookup input { margin: 0; border: 2px solid #171717; border-radius: .8rem; }
+    .check-button { margin: 0; min-height: 3rem; padding: .55rem 1.25rem; }
+    .recent-orders {
+      margin: 0 0 1.5rem;
+      border: 2px solid #171717;
+      border-radius: 1.2rem;
+      box-shadow: 0 2px 0 #171717;
+      overflow: hidden;
+    }
+    .recent-orders h2 {
+      margin: 0;
+      padding: .7rem 1rem;
+      border-bottom: 2px solid #171717;
+      font-size: 1.4rem;
+    }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; min-width: 700px; margin: 0; border-collapse: collapse; }
+    th, td { padding: .75rem .85rem; text-align: left; vertical-align: middle; }
+    thead th { border-bottom: 2px solid #171717; }
+    tbody tr + tr td { border-top: 2px solid #171717; }
+    .order-number { font-weight: 700; white-space: nowrap; }
+    .status { min-height: 2.2rem; padding: .25rem .75rem; border-radius: 999px; }
+    .back-link { min-height: 3.25rem; padding: .65rem 1.5rem; font-size: 1.15rem; }
+
+    @media (max-width: 760px) {
+      body { padding: .75rem; }
+      .cafe-app { border-radius: 1.25rem; }
+      .site-header { align-items: flex-start; flex-direction: column; padding: 1rem; }
+      .main-nav { width: 100%; }
+      .main-nav a { flex: 1 1 auto; padding-inline: .65rem; }
+      main { padding: 1.25rem 1rem 1.5rem; }
+      .lookup { grid-template-columns: 1fr; gap: .65rem; }
+      .check-button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cafe-app">
+    <header class="site-header">
+      <a class="brand" href="menu.html" aria-label="Café Calle Ocho menu">
+        <span class="brand-icon" aria-hidden="true">☕</span>
+        <span class="brand-name">Café Calle Ocho</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="menu.html">Menu</a>
+        <a href="order.html">My Order</a>
+        <a href="history.html" aria-current="page">Track Order</a>
+        <a href="kitchen.html">Kitchen</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Track Order</h1>
+      <p class="intro">Check the status of your order or view your past orders.</p>
+
+      <form class="lookup" role="search">
+        <label for="order-number">Order Number:</label>
+        <input id="order-number" name="order-number" type="text" placeholder="e.g., #1042">
+        <button class="check-button" type="button"><span aria-hidden="true">⌕</span>&nbsp; Check Status</button>
+      </form>
+
+      <section class="recent-orders" aria-labelledby="recent-orders-title">
+        <h2 id="recent-orders-title">Recent Orders</h2>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Order #</th>
+                <th scope="col">Date &amp; Time</th>
+                <th scope="col">Items</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="order-number">#1042</td>
+                <td>Nov 7, 1:24 PM</td>
+                <td>Café con Leche, Cuban Sandwich</td>
+                <td>$12.00</td>
+                <td><span class="status">Preparing</span></td>
+              </tr>
+              <tr>
+                <td class="order-number">#1041</td>
+                <td>Nov 7, 12:10 PM</td>
+                <td>Guava Pastry</td>
+                <td>$3.00</td>
+                <td><span class="status">Ready</span></td>
+              </tr>
+              <tr>
+                <td class="order-number">#1040</td>
+                <td>Nov 6, 4:30 PM</td>
+                <td>Cortadito, Cuban Sandwich</td>
+                <td>$11.25</td>
+                <td><span class="status">Completed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <a class="back-link" href="menu.html"><span aria-hidden="true">←</span>&nbsp; Back to Menu</a>
+    </main>
+  </div>
+</body>
+</html>
