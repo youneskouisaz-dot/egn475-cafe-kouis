@@ -1,21 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ page_title }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="{{ url_for('home') }}">Café Kouis</a>
-    <nav aria-label="Main navigation">
-      <a class="active" href="{{ url_for('home') }}">Home</a>
-      <a href="{{ url_for('about') }}">About</a>
-    </nav>
-  </header>
+{% extends "base.html" %}
 
-  <main>
+{% block content %}
     <section class="hero">
       <p class="eyebrow">EGN475 Flask Prototype</p>
       <h1>A small café site, built one route at a time.</h1>
@@ -46,8 +31,4 @@
         </article>
       </div>
     </section>
-  </main>
-
-  <footer>EGN475 prototype · Café Kouis</footer>
-</body>
-</html>
+{% endblock %}
