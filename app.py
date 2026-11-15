@@ -236,7 +236,7 @@ def menu():
     )
 
 
-@app.get("/menu/<int:item_id>", endpoint="item_detail")
+@app.get("/menu/<int:item_id>")
 def item_detail(item_id):
     """Render a menu item's details or return not found."""
     item = next((sample for sample in SAMPLE_ITEMS if sample["id"] == item_id), None)

@@ -21,9 +21,9 @@ class CafeRouteTests(unittest.TestCase):
         response = self.client.get("/about")
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Our caf\xc3\xa9", response.data)
-        self.assertIn(b"neighborhood stop", response.data)
-        self.assertIn(b'href="/menu"', response.data)
+        self.assertIn(b"About this prototype", response.data)
+        self.assertIn(b"Caf\xc3\xa9 Calle Ocho is a small EGN475 practice project.", response.data)
+        self.assertIn(b'href="/"', response.data)
 
     def test_kitchen_board_uses_shared_layout_and_displays_sample_orders(self):
         response = self.client.get("/kitchen")
