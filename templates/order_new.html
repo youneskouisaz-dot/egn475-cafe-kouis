@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="menu-heading-row">
+        <h1>Start an Order</h1>
+      </div>
+
+      <aside class="order-prototype-note" role="note">
+        <strong>Prototype preview:</strong> Order submission is not available yet. This form is for display only, and your details will not be saved.
+      </aside>
+
+      <form class="order-form" aria-label="Prototype order form">
+        <fieldset disabled>
+          <label for="customer-name">Customer name</label>
+          <input id="customer-name" name="customer_name" type="text" placeholder="Enter your name">
+
+          <fieldset class="order-menu-options">
+            <legend>Select menu items and quantities</legend>
+            {% for item in items %}
+              <div class="order-menu-option">
+                <label for="item-{{ item.id }}">
+                  <input id="item-{{ item.id }}" name="item_ids" type="checkbox" value="{{ item.id }}"{% if item.cart_quantity > 0 %} checked{% endif %}>
+                  <span class="order-option-icon" aria-hidden="true">{{ item.icon }}</span>
+                  <span>
+                    <strong>{{ item.name }}</strong>
+                    <small>{{ item.category }} · ${{ "%d.%02d"|format(item.price_cents // 100, item.price_cents % 100) }}</small>
+                  </span>
+                </label>
+                <label class="quantity-field" for="quantity-{{ item.id }}">
+                  Qty
+                  <input id="quantity-{{ item.id }}" name="quantity_{{ item.id }}" type="number" min="1" value="{{ item.cart_quantity if item.cart_quantity > 0 else 1 }}">
+                </label>
+              </div>
+            {% endfor %}
+          </fieldset>
+
+          <label for="order-notes">Order notes <small>(optional)</small></label>
+          <textarea id="order-notes" name="notes" rows="3" placeholder="Any special requests?"></textarea>
+          <button type="submit" disabled>Submit order (not available)</button>
+        </fieldset>
+      </form>
+
+      <section class="order-cart-summary" aria-labelledby="order-cart-title">
+        <h2 id="order-cart-title">Current cart</h2>
+        {% if cart_items %}
+          <div class="order-summary-table-wrap">
+            <table class="order-summary-table">
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Qty</th>
+                  <th scope="col">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                  <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.cart_quantity }}</td>
+                    <td>${{ "%d.%02d"|format(item.line_total_cents // 100, item.line_total_cents % 100) }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="2" scope="row">Cart total</th>
+                  <td>${{ "%d.%02d"|format(cart_total_cents // 100, cart_total_cents % 100) }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        {% else %}
+          <p>Your cart is empty. Browse the <a href="{{ url_for('menu') }}">full menu</a> to see the available items.</p>
+        {% endif %}
+      </section>
+{% endblock %}

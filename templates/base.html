@@ -7,19 +7,34 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="{{ url_for('home') }}">Café Kouis</a>
-    <nav aria-label="Main navigation">
-      <a {% if request.endpoint == 'home' %}class="active"{% endif %} href="{{ url_for('home') }}">Home</a>
-      <a {% if request.endpoint == 'about' %}class="active"{% endif %} href="{{ url_for('about') }}">About</a>
-    </nav>
-  </header>
+<body class="{% block body_class %}{% endblock %}">
+  <div class="{% block page_container_class %}{% endblock %}">
+    <header class="site-header">
+      <a class="brand" href="{{ url_for('home') }}">Café Calle Ocho</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a {% if request.endpoint == 'home' %}class="active"{% endif %} href="{{ url_for('home') }}">Home</a>
+        <a {% if request.endpoint == 'about' %}class="active"{% endif %} href="{{ url_for('about') }}">About</a>
+        <a {% if request.endpoint in ('menu', 'item_detail') %}class="active"{% endif %} href="{{ url_for('menu') }}">Menu</a>
+        <a {% if request.endpoint in ('cart', 'cart_add', 'cart_remove') %}class="active"{% endif %} href="{{ url_for('cart') }}">Cart <span class="cart-count">{{ cart_count }}</span></a>
+        <a {% if request.endpoint == 'order_new' %}class="active"{% endif %} href="{{ url_for('order_new') }}">Order Form</a>
+      </nav>
+    </header>
 
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-messages" role="status">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
-  <footer>EGN475 prototype · Café Kouis</footer>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">EGN475 prototype · Café Calle Ocho</footer>
+  </div>
 </body>
 </html>
