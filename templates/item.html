@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <h1>{{ item.name }}</h1>
+      <article class="item-detail">
+        <div class="item-icon" aria-hidden="true">{{ item.icon }}</div>
+        <div class="item-details">
+          <p class="category">{{ item.category }}</p>
+          <p>{{ item.description }}</p>
+          <p class="price">${{ "%d.%02d"|format(item.price_cents // 100, item.price_cents % 100) }}</p>
+        </div>
+      </article>
+      <a class="back-link" href="{{ url_for('menu') }}">← Back to Menu</a>
+      <form class="detail-add-form" action="{{ url_for('cart_add', item_id=item.id) }}" method="post">
+        <input type="hidden" name="return_to" value="item_detail">
+        <button type="submit">Add to cart</button>
+      </form>
+{% endblock %}

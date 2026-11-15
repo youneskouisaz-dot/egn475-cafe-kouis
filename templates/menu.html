@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="menu-heading-row">
+        <h1>Menu</h1>
+      </div>
+
+      <section class="menu-grid" aria-label="Café Calle Ocho menu items">
+        {% for item in items %}
+        <article class="menu-item">
+          <div class="item-icon" aria-hidden="true">{{ item.icon }}</div>
+          <div class="item-details">
+            <p class="category">{{ item.category }}</p>
+            <h2><a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.name }}</a></h2>
+            <p>{{ item.description }}</p>
+          </div>
+          <div class="item-actions">
+            <span class="price">${{ "%d.%02d"|format(item.price_cents // 100, item.price_cents % 100) }}</span>
+            <a class="item-link" href="{{ url_for('item_detail', item_id=item.id) }}">Details</a>
+            <form action="{{ url_for('cart_add', item_id=item.id) }}" method="post">
+              <input type="hidden" name="return_to" value="menu">
+              <button class="item-link" type="submit">Add to cart</button>
+            </form>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+{% endblock %}

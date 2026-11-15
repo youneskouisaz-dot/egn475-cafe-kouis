@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="menu-heading-row">
+        <h1>Your Cart</h1>
+        <a class="back-link" href="{{ url_for('menu') }}">Continue shopping</a>
+      </div>
+
+      {% if cart_items %}
+        <section class="cart-items" aria-label="Items in your cart">
+          {% for item in cart_items %}
+            <article class="cart-item">
+              <div class="item-icon" aria-hidden="true">{{ item.icon }}</div>
+              <div class="item-details">
+                <h2>{{ item.name }}</h2>
+                <p>Quantity: {{ item.quantity }}</p>
+              </div>
+              <div class="item-actions">
+                <span class="price">${{ "%d.%02d"|format((item.price_cents * item.quantity) // 100, (item.price_cents * item.quantity) % 100) }}</span>
+                <form action="{{ url_for('cart_remove', item_id=item.id) }}" method="post">
+                  <button class="item-link" type="submit">Remove</button>
+                </form>
+              </div>
+            </article>
+          {% endfor %}
+        </section>
+        <p class="cart-total">Total: ${{ "%d.%02d"|format(total_cents // 100, total_cents % 100) }}</p>
+      {% else %}
+        <p class="empty-cart">Your cart is empty. Add something from today’s specials or browse the full menu.</p>
+      {% endif %}
+{% endblock %}
