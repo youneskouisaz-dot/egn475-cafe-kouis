@@ -17,6 +17,7 @@
         <a {% if request.endpoint in ('menu', 'item_detail') %}class="active"{% endif %} href="{{ url_for('menu') }}">Menu</a>
         <a {% if request.endpoint in ('cart', 'cart_add', 'cart_remove') %}class="active"{% endif %} href="{{ url_for('cart') }}">Cart <span class="cart-count">{{ cart_count }}</span></a>
         <a {% if request.endpoint == 'order_new' %}class="active"{% endif %} href="{{ url_for('order_new') }}">Order Form</a>
+        <a {% if request.endpoint == 'kitchen' %}class="active"{% endif %} href="{{ url_for('kitchen') }}">Kitchen Board</a>
       </nav>
     </header>
 

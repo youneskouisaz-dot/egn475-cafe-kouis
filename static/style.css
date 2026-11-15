@@ -531,6 +531,150 @@ h3 { margin: 0 0 .7rem; font-size: 1.3rem; }
   font-weight: 700;
 }
 
+.kitchen-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kitchen-heading h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  letter-spacing: normal;
+}
+
+.kitchen-heading p {
+  margin: .35rem 0 0;
+}
+
+.cafe-page .kitchen-menu-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.65rem;
+  padding: .5rem 1rem;
+  border: 2px solid #171717;
+  border-radius: .8rem;
+  color: #171717;
+  background: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 #171717;
+}
+
+.kitchen-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: .9rem;
+}
+
+.kitchen-column {
+  min-height: 20rem;
+  margin: 0;
+  padding: 0 0 .25rem;
+  border: 2px solid #171717;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 0 #171717;
+  overflow: hidden;
+}
+
+.kitchen-column > h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  margin: 0;
+  padding: .7rem .8rem;
+  border-bottom: 2px solid #171717;
+  background-image: repeating-linear-gradient(135deg, #fff 0, #fff 5px, #e8e8e8 5px, #e8e8e8 7px);
+  font-size: 1.2rem;
+  letter-spacing: normal;
+}
+
+.kitchen-order-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid #171717;
+  border-radius: 50%;
+  font-size: .85rem;
+}
+
+.kitchen-ticket {
+  margin: .85rem .65rem;
+  padding: .8rem;
+  border: 2px solid #171717;
+  border-radius: 1rem;
+  box-shadow: 0 2px 0 #171717;
+}
+
+.ticket-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .45rem;
+}
+
+.ticket-heading h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.ticket-customer {
+  margin: .2rem 0 0;
+  font-size: .9rem;
+}
+
+.ticket-time {
+  flex: 0 0 auto;
+  font-size: .82rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ticket-items {
+  margin: 0 0 .75rem;
+  padding-left: 1.2rem;
+  font-size: .95rem;
+}
+
+.ticket-items li {
+  margin-bottom: .15rem;
+}
+
+.ticket-status {
+  margin: 0;
+  padding: .35rem .55rem;
+  border: 1px solid #171717;
+  border-radius: .65rem;
+  font-size: .85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.status-pending {
+  background: #f3ead6;
+}
+
+.status-preparing {
+  background: #e8eef5;
+}
+
+.status-ready {
+  background: #e7f0e5;
+}
+
+.empty-kitchen-column {
+  margin: .85rem;
+  text-align: center;
+}
+
 .cafe-page .back-link {
   min-height: 3.25rem;
   padding: .65rem 1.5rem;
@@ -565,6 +709,8 @@ footer {
   .cafe-page .main-nav a { flex: 1 1 auto; padding-inline: .65rem; }
   .cafe-page main { padding: 1.25rem 1rem 1.5rem; }
   .menu-grid { grid-template-columns: 1fr; }
+  .kitchen-columns { grid-template-columns: 1fr; }
+  .kitchen-column { min-height: 0; }
 }
 
 @media (max-width: 480px) {
@@ -580,4 +726,5 @@ footer {
   .order-cart-summary { padding: .9rem; }
   .order-menu-option { grid-template-columns: 1fr; }
   .quantity-field { justify-content: space-between; }
+  .kitchen-heading { align-items: stretch; flex-direction: column; }
 }

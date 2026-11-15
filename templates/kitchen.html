@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="kitchen-heading">
+        <div>
+          <h1>Kitchen Board</h1>
+          <p>Sample orders for the Café Calle Ocho kitchen.</p>
+        </div>
+        <a class="kitchen-menu-link" href="{{ url_for('menu') }}">Back to Menu</a>
+      </div>
+
+      <section class="kitchen-columns" aria-label="Orders grouped by preparation status">
+        {% for status, orders in orders_by_status.items() %}
+          <section class="kitchen-column" aria-labelledby="status-{{ status|lower }}">
+            <h2 id="status-{{ status|lower }}">
+              {{ status }}
+              <span class="kitchen-order-count">{{ orders|length }}</span>
+            </h2>
+            {% if orders %}
+              {% for order in orders %}
+                <article class="kitchen-ticket">
+                  <header class="ticket-heading">
+                    <div>
+                      <h3>Order #{{ order.id }}</h3>
+                      <p class="ticket-customer">{{ order.customer_name }}</p>
+                    </div>
+                    <time class="ticket-time">{{ order.order_time }}</time>
+                  </header>
+                  <ul class="ticket-items">
+                    {% for item in order["items"] %}
+                      <li>{{ item.quantity }} × {{ item.name }}</li>
+                    {% endfor %}
+                  </ul>
+                  <p class="ticket-status status-{{ order.status|lower }}">
+                    {% if order.status == "Pending" %}
+                      Waiting to start
+                    {% elif order.status == "Preparing" %}
+                      In preparation
+                    {% elif order.status == "Ready" %}
+                      Ready for pickup
+                    {% endif %}
+                  </p>
+                </article>
+              {% endfor %}
+            {% else %}
+              <p class="empty-kitchen-column">No sample orders.</p>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </section>
+{% endblock %}

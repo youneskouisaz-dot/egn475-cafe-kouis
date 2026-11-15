@@ -83,6 +83,41 @@ SAMPLE_ITEMS = [
 
 TODAY_MENU_IDS = {7, 8, 9}
 
+SAMPLE_KITCHEN_ORDERS = [
+    {
+        "id": 1043,
+        "customer_name": "Sofia M.",
+        "items": [
+            {"name": "Guava Pastry", "quantity": 2},
+            {"name": "Café con Leche", "quantity": 1},
+        ],
+        "status": "Pending",
+        "order_time": "1:28 PM",
+    },
+    {
+        "id": 1042,
+        "customer_name": "Mateo R.",
+        "items": [
+            {"name": "Cuban Sandwich", "quantity": 1},
+            {"name": "Cortadito", "quantity": 2},
+        ],
+        "status": "Preparing",
+        "order_time": "1:24 PM",
+    },
+    {
+        "id": 1041,
+        "customer_name": "Lucia P.",
+        "items": [
+            {"name": "Medianoche Sandwich", "quantity": 1},
+            {"name": "Citrus Sparkler", "quantity": 1},
+        ],
+        "status": "Ready",
+        "order_time": "1:10 PM",
+    },
+]
+
+KITCHEN_STATUSES = ("Pending", "Preparing", "Ready")
+
 
 @app.get("/")
 def home():
@@ -99,6 +134,24 @@ def home():
 def about():
     """Render a page describing the prototype and its purpose."""
     return render_template("about.html", page_title="About | Café Calle Ocho")
+
+
+@app.get("/kitchen")
+def kitchen():
+    """Render the display-only sample kitchen board."""
+    orders_by_status = {
+        status: [
+            order
+            for order in SAMPLE_KITCHEN_ORDERS
+            if order["status"] == status
+        ]
+        for status in KITCHEN_STATUSES
+    }
+    return render_template(
+        "kitchen.html",
+        page_title="Kitchen Board | Café Calle Ocho",
+        orders_by_status=orders_by_status,
+    )
 
 
 @app.get("/order/new")
