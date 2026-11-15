@@ -118,6 +118,42 @@ SAMPLE_KITCHEN_ORDERS = [
 
 KITCHEN_STATUSES = ("Pending", "Preparing", "Ready")
 
+SAMPLE_ORDER_HISTORY = [
+    {
+        "id": 1042,
+        "customer_name": "Elena Garcia",
+        "order_date": "Nov 14, 2026 · 1:24 PM",
+        "items": [
+            {"name": "Café con Leche", "quantity": 1, "price_cents": 350},
+            {"name": "Cuban Sandwich", "quantity": 1, "price_cents": 850},
+        ],
+        "total_cents": 1200,
+        "status": "Preparing",
+    },
+    {
+        "id": 1041,
+        "customer_name": "Marcus Lee",
+        "order_date": "Nov 14, 2026 · 12:10 PM",
+        "items": [
+            {"name": "Guava Pastry", "quantity": 1, "price_cents": 300},
+            {"name": "Cortadito", "quantity": 2, "price_cents": 275},
+        ],
+        "total_cents": 850,
+        "status": "Ready",
+    },
+    {
+        "id": 1040,
+        "customer_name": "Isabella Cruz",
+        "order_date": "Nov 13, 2026 · 4:30 PM",
+        "items": [
+            {"name": "Cortadito", "quantity": 1, "price_cents": 275},
+            {"name": "Cuban Sandwich", "quantity": 1, "price_cents": 850},
+        ],
+        "total_cents": 1125,
+        "status": "Completed",
+    },
+]
+
 
 @app.get("/")
 def home():
@@ -151,6 +187,16 @@ def kitchen():
         "kitchen.html",
         page_title="Kitchen Board | Café Calle Ocho",
         orders_by_status=orders_by_status,
+    )
+
+
+@app.get("/orders")
+def orders():
+    """Render the static sample order history."""
+    return render_template(
+        "orders.html",
+        page_title="Order History | Café Calle Ocho",
+        orders=SAMPLE_ORDER_HISTORY,
     )
 
 

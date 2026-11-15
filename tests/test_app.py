@@ -42,6 +42,26 @@ class CafeRouteTests(unittest.TestCase):
         self.assertIn(b"Lucia P.", response.data)
         self.assertIn(b"Ready for pickup", response.data)
 
+    def test_order_history_uses_shared_layout_and_displays_all_sample_orders(self):
+        response = self.client.get("/orders")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<a class="brand" href="/">Caf\xc3\xa9 Calle Ocho</a>', response.data)
+        self.assertIn(b'href="/orders">Order History</a>', response.data)
+        self.assertIn(b"Elena Garcia", response.data)
+        self.assertIn(b"#1042", response.data)
+        self.assertIn(b"Caf\xc3\xa9 con Leche", response.data)
+        self.assertIn(b"$12.00", response.data)
+        self.assertIn(b"Preparing", response.data)
+        self.assertIn(b"Marcus Lee", response.data)
+        self.assertIn(b"#1041", response.data)
+        self.assertIn(b"$8.50", response.data)
+        self.assertIn(b"Ready", response.data)
+        self.assertIn(b"Isabella Cruz", response.data)
+        self.assertIn(b"#1040", response.data)
+        self.assertIn(b"$11.25", response.data)
+        self.assertIn(b"Completed", response.data)
+
     def test_order_form_uses_shared_layout_and_displays_sample_menu(self):
         response = self.client.get("/order/new")
 

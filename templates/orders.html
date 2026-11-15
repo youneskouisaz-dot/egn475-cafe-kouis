@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="history-heading">
+        <div>
+          <h1>Order History</h1>
+          <p>Recent sample orders from Café Calle Ocho.</p>
+        </div>
+        <a class="history-menu-link" href="{{ url_for('menu') }}">Back to Menu</a>
+      </div>
+
+      <section class="history-orders" aria-labelledby="history-orders-title">
+        <h2 id="history-orders-title">Recent Orders</h2>
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Date &amp; Time</th>
+                <th scope="col">Items</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+                <tr>
+                  <td>
+                    <span class="history-order-number">#{{ order.id }}</span>
+                    <span class="history-customer">{{ order.customer_name }}</span>
+                  </td>
+                  <td>{{ order.order_date }}</td>
+                  <td>
+                    <ul class="history-item-list">
+                      {% for item in order["items"] %}
+                        <li>
+                          {{ item.quantity }} × {{ item.name }}
+                          <span class="history-item-total">${{ "%d.%02d"|format((item.price_cents * item.quantity) // 100, (item.price_cents * item.quantity) % 100) }}</span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </td>
+                  <td class="history-total">${{ "%d.%02d"|format(order.total_cents // 100, order.total_cents % 100) }}</td>
+                  <td>
+                    {% if order.status == "Preparing" %}
+                      <span class="history-status status-preparing">Preparing</span>
+                    {% elif order.status == "Ready" %}
+                      <span class="history-status status-ready">Ready</span>
+                    {% elif order.status == "Completed" %}
+                      <span class="history-status status-completed">Completed</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+{% endblock %}
