@@ -13,7 +13,7 @@
 
 </div>
 
-> **Scope note:** The current application is the Assignment 1.1 Café Kouis starter with two working routes: `/` and `/about`. Café Calle Ocho is the Assignment 1.2 ordering-system concept described in this README. Ordering, kitchen workflow, customer history, and menu administration are planned—not implemented in the current app.
+> **Scope note:** This application began as the Assignment 1.1 Café Kouis starter and now includes the Café Calle Ocho prototype: a SQLite-backed menu, session cart, display-only order and kitchen pages, and an unauthenticated staff menu-item creation form. Order submission, status updates, and authentication are not implemented.
 
 ## Contents
 
@@ -32,7 +32,7 @@
 
 Café Calle Ocho is a proposed small web prototype for a Cuban café in Little Havana, Miami. Its intended workflow connects a customer-facing menu and ordering experience with a simple kitchen order board. Customers would be able to follow an order from placement through pickup, while staff would see clear tickets and status changes.
 
-This repository is an **EGN475 educational project**, not a production ordering service. The current Flask code remains the small two-route starter described below; the ordering experience is future development.
+This repository is an **EGN475 educational project**, not a production ordering service. The current prototype includes a SQLite-backed menu, session cart, sample kitchen and order-history pages, and an unauthenticated staff menu-item form. Order submission and kitchen status updates remain future development.
 
 ## Why Option A
 
@@ -66,7 +66,7 @@ I chose **Option A — Café Calle Ocho** because a café ordering workflow is p
 
 ## Prototype scope
 
-These are the **must-have features for the planned prototype**. They are not present in the current two-route starter yet.
+These are the **must-have features for the planned prototype**. Some are implemented in display-only or prototype form; current behavior is listed below.
 
 1. Browse the café menu.
 2. Select menu items.
@@ -74,7 +74,7 @@ These are the **must-have features for the planned prototype**. They are not pre
 4. Show an order confirmation with an ID.
 5. Display a kitchen order board.
 6. Update order status through **Received → Preparing → Ready → Picked Up**.
-7. Provide order history and basic menu administration.
+7. Provide order history and basic menu administration. A menu-item creation form is implemented; authentication and editing or deleting menu items remain future work.
 
 ### Out of scope
 
@@ -92,14 +92,28 @@ These are the **must-have features for the planned prototype**. They are not pre
 
 ## Current application
 
-The repository currently contains the Assignment 1.1 Flask starter. `app.py` creates a Flask application and defines:
+`app.py` creates the Flask application and defines:
 
 | Route | Current behavior |
 | --- | --- |
 | `/` | Renders the existing home-page template. |
 | `/about` | Renders the existing prototype information page. |
+| `/menu`, `/menu/<int:item_id>` | Read available menu items and item details from SQLite. |
+| `/admin/menu/new` | Displays a staff menu-item form and saves submitted items to SQLite. Authentication is not enabled. |
+| `/cart`, `/order/new` | Maintain a session cart and render a display-only order preview. |
+| `/kitchen`, `/orders` | Render static sample kitchen tickets and order history. |
 
-The current application does **not** yet provide a menu, cart, order submission, order IDs, kitchen board, status updates, order history, or menu administration. The feature list above describes intended future scope only. The repository includes four automated route tests for the current starter; they do not test ordering functionality.
+The application does not yet submit orders, generate order IDs, or update kitchen statuses. The repository includes automated route, menu, and staff-form tests; database-backed tests use isolated temporary SQLite databases.
+
+### Existing database schema upgrade
+
+The staff form adds `description` and `icon` columns to `menu_items`. The migration at `migrations/add_menu_item_display_fields.py` is **not run automatically** and must not be replaced with `init-db`, which drops and recreates tables. After backing up the existing database and reviewing the migration, apply it explicitly with:
+
+```powershell
+python migrations/add_menu_item_display_fields.py instance/cafe.sqlite
+```
+
+The migration adds only missing columns, fills blank display fields for the existing sample menu items, and preserves other records and populated values.
 
 ## Getting started on Windows
 
@@ -114,7 +128,7 @@ python -m pip install -r requirements.txt
 flask --app app run --debug
 ```
 
-Open <http://127.0.0.1:5000/> for the home page and <http://127.0.0.1:5000/about> for the about page. The current app's `app.run(debug=True)` also supports running it directly with `python app.py`.
+Open <http://127.0.0.1:5000/> for the home page, <http://127.0.0.1:5000/menu> for the database-backed menu, and <http://127.0.0.1:5000/admin/menu/new> for the unauthenticated prototype staff form. An existing database needs the documented additive migration before menu pages or form submissions can use the new display columns. The current app's `app.run(debug=True)` also supports running it directly with `python app.py`.
 
 To run the existing route tests, open another PowerShell terminal in the project folder, activate the environment, and run:
 
@@ -126,33 +140,32 @@ If PowerShell blocks activation, use `.\.venv\Scripts\python.exe -m pip install 
 
 ## Project structure
 
-This tree lists files and directories currently present on the repository's `main` branch; it does not include generated or ignored local files such as `.venv/` or `__pycache__/`.
+Key Week 4 application files are organized as follows. Generated or ignored local files such as `.venv/`, `instance/`, and `__pycache__/` are not included.
 
 ```text
 .
 ├── .gitignore
 ├── AI_INTERACTION_LOG.md
-├── EGN475_W1A1_KouisYounes.pdf
-├── Q_AND_A_DRAFTS.md
 ├── README.md
 ├── app.py
-├── automated-test-output.txt
-├── browser-about.png
-├── browser-home.png
+├── db.py
+├── migrations/
+│   └── add_menu_item_display_fields.py
 ├── requirements.txt
+├── schema.sql
 ├── static/
 │   └── style.css
 ├── templates/
-│   ├── about.html
-│   └── index.html
+│   ├── admin_menu_new.html
+│   ├── ...
 └── tests/
     └── test_app.py
 ```
 
 ## Academic milestones
 
-- **Assignment 1.1 — Prototyping environment:** The repository contains the two-route Flask starter, templates, requirements, ignore rules, and route tests. The project files and tests were verified in the Manus Ubuntu sandbox. The student should independently recreate and run the environment on the required Windows computer and follow the instructor's evidence and disclosure requirements.
-- **Assignment 1.2 — Café Calle Ocho:** This README documents the chosen concept, assumed problem statement, personas, target scope, exclusions, and user journeys. The ordering workflow is a planned design scope; it should not be described as implemented until it has actually been built and tested.
+- **Assignment 1.1 — Prototyping environment:** The repository began with the two-route Flask starter, templates, requirements, ignore rules, and route tests. The student should follow the instructor's evidence and disclosure requirements for any submitted work.
+- **Assignment 1.2 — Café Calle Ocho:** This README documents the chosen concept, assumed problem statement, personas, target scope, exclusions, and user journeys. The current Week 4 prototype adds SQLite menu integration and staff menu-item creation; order submission and status updates remain planned.
 
 ---
 

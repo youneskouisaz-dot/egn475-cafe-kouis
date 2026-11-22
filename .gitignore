@@ -4,3 +4,15 @@ __pycache__/
 .pytest_cache/
 .env
 .DS_Store
+instance/
+*.db
+*.db-*
+*.db.*
+*.sqlite
+*.sqlite-*
+*.sqlite.*
+*.sqlite3
+*.sqlite3-*
+*.sqlite3.*
+*.backup
+*.bak

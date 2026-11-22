@@ -1,10 +1,16 @@
 import os
 import secrets
+from decimal import Decimal, InvalidOperation
 
 from flask import Flask, abort, flash, redirect, render_template, request, session, url_for
 
+import db
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
+os.makedirs(app.instance_path, exist_ok=True)
+app.config["DATABASE"] = os.path.join(app.instance_path, "cafe.sqlite")
+db.init_app(app)
 
 SAMPLE_ITEMS = [
     {
@@ -228,26 +234,103 @@ def order_new():
 
 @app.get("/menu")
 def menu():
-    """Render the sample café menu."""
+    """Render available menu items from the database."""
+    rows = db.get_db().execute(
+        "SELECT id, name, category, description, icon, price_cents, available "
+        "FROM menu_items WHERE available = ? ORDER BY name",
+        (1,),
+    ).fetchall()
+
     return render_template(
         "menu.html",
         page_title="Menu | Café Calle Ocho",
-        items=SAMPLE_ITEMS,
+        items=rows,
     )
 
 
 @app.get("/menu/<int:item_id>")
 def item_detail(item_id):
-    """Render a menu item's details or return not found."""
-    item = next((sample for sample in SAMPLE_ITEMS if sample["id"] == item_id), None)
-    if item is None:
+    """Render a database menu item or return not found."""
+    row = db.get_db().execute(
+        "SELECT id, name, category, description, icon, price_cents, available "
+        "FROM menu_items WHERE id = ?",
+        (item_id,),
+    ).fetchone()
+    if row is None:
         abort(404)
 
     return render_template(
         "item.html",
-        page_title=f"{item['name']} | Café Calle Ocho",
-        item=item,
+        page_title=f"{row['name']} | Café Calle Ocho",
+        item=row,
     )
+
+
+@app.route("/admin/menu/new", methods=("GET", "POST"))
+def admin_menu_new():
+    if request.method == "GET":
+        return render_template(
+            "admin_menu_new.html",
+            page_title="Add Menu Item | Café Calle Ocho",
+            form_data={},
+        )
+
+    name = request.form.get("name", "").strip()
+    category = request.form.get("category", "").strip()
+    description = request.form.get("description", "").strip()
+    icon = request.form.get("icon", "").strip()
+
+    if not name:
+        flash("Menu item name is required.")
+        return _render_admin_menu_form(request.form), 400
+    if not category:
+        flash("Menu item category is required.")
+        return _render_admin_menu_form(request.form), 400
+
+    try:
+        price_cents = _price_to_cents(request.form.get("price", ""))
+    except ValueError as error:
+        flash(str(error))
+        return _render_admin_menu_form(request.form), 400
+
+    database = db.get_db()
+    database.execute(
+        "INSERT INTO menu_items "
+        "(name, category, description, icon, price_cents) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (name, category, description, icon, price_cents),
+    )
+    database.commit()
+
+    flash(f"{name} added to the menu.")
+    return redirect(url_for("menu"))
+
+
+def _render_admin_menu_form(form_data):
+    return render_template(
+        "admin_menu_new.html",
+        page_title="Add Menu Item | Café Calle Ocho",
+        form_data=form_data,
+    )
+
+
+def _price_to_cents(value):
+    try:
+        price = Decimal(value.strip())
+    except InvalidOperation as error:
+        raise ValueError("Enter a valid price with up to two decimal places.") from error
+
+    if not price.is_finite() or price < 0:
+        raise ValueError("Price must be a nonnegative amount.")
+    if price > Decimal(2**63 - 1) / Decimal(100):
+        raise ValueError("Price is too large.")
+
+    numerator, denominator = price.as_integer_ratio()
+    cents, remainder = divmod(numerator * 100, denominator)
+    if remainder:
+        raise ValueError("Price must have no more than two decimal places.")
+
+    return cents
 
 
 @app.get("/cart")

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block body_class %}cafe-page{% endblock %}
+{% block page_container_class %}cafe-app{% endblock %}
+
+{% block content %}
+      <div class="menu-heading-row">
+        <h1>Add a Menu Item</h1>
+      </div>
+
+      <aside class="order-prototype-note" role="note">
+        Staff form preview: authentication is not enabled yet.
+      </aside>
+
+      <form class="order-form" method="post" action="{{ url_for('admin_menu_new') }}">
+        <label for="item-name">Name</label>
+        <input id="item-name" name="name" type="text" required value="{{ form_data.get('name', '') }}">
+
+        <label for="item-category">Category</label>
+        <input id="item-category" name="category" type="text" required value="{{ form_data.get('category', '') }}">
+
+        <label for="item-price">Price (dollars)</label>
+        <input id="item-price" name="price" type="number" min="0" step="0.01" inputmode="decimal" required value="{{ form_data.get('price', '') }}">
+
+        <label for="item-description">Description <small>(optional)</small></label>
+        <textarea id="item-description" name="description" rows="3">{{ form_data.get('description', '') }}</textarea>
+
+        <label for="item-icon">Icon <small>(optional)</small></label>
+        <input id="item-icon" name="icon" type="text" value="{{ form_data.get('icon', '') }}">
+
+        <button type="submit">Add to Menu</button>
+      </form>
+{% endblock %}
